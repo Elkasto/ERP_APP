@@ -47,6 +47,19 @@ app.delete('/products/:id', async (req, res) => {
     }
 });
 
+// Actualizar producto
+app.put('/products/:id', async (req, res) => {
+  try {
+    const product = await db.Product.findByPk(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+
+    await product.update(req.body);
+    return res.json(product);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 // Autenticar la conexión (opcional pero útil para logs)
 db.sequelize.authenticate()
   .then(() => console.log('✅ Conexión con SQLite establecida correctamente.'))
