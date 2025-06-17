@@ -48,7 +48,15 @@ function App() {
       })
       .catch(error => console.error('⛔ Error creando producto:', error));
   };
-
+  // 🗑️ Función para eliminar producto
+  const deleteProduct = (id) => {
+    axios.delete(`/products/${id}`)
+      .then(() => {
+        setProducts(products.filter(product => product.id !== id));
+      })
+      .catch(err => console.error('⛔ Error al eliminar producto:', err));
+  };
+  
   return (
     <div style={{ padding: '2rem' }}>
       <h1>ERP MVP - Gestión de Productos</h1>
@@ -105,14 +113,18 @@ function App() {
             newProduct.quantity <= 0 ||
             newProduct.price <= 0
           }
-        >
-          Agregar Producto
+        >Agregar Producto
         </button>
       </div>
       <ul>
         {products.map(product => (
           <li key={product.id}>
             <strong>{product.name}</strong>: {product.description} | Cantidad: {product.quantity} | Precio: ${product.price}
+            <button
+              style={{ marginLeft: '1rem', color: 'white', background: 'crimson', border: 'none', cursor: 'pointer' }}
+              onClick={() => deleteProduct(product.id)}
+              >🗑️ Eliminar
+            </button>
           </li>
         ))}
       </ul>
