@@ -4,7 +4,7 @@ const {Sequelize, DataTypes} = require('sequelize');
 // Configuración: Base de datos SQLite
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'database.sqlite'
+    storage: './database.sqlite'
 });
 
 const db = {};
@@ -12,6 +12,6 @@ db.Sequelize = sequelize;
 db.sequelize = sequelize;
 
 // Importar el modelo de Producto
-db.Product = require('./Product').default(sequelize, DataTypes);
+db.Product = require('./Product')(sequelize, DataTypes);
 
 module.exports = db;

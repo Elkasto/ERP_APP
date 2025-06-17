@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function App() {
+  // Estado que almacena productos existentes
   const [products, setProducts] = useState([]);
+  // Estado que guarda los valores del nuevo producto a crear
   const [newProduct, setNewProduct] = useState({ name: '', description: '', quantity: 0, price: 0 });
 
   // Cargar productos al montar el componente
+  // Se llama cuando se renderiza por primera vez el componente
   useEffect(() => {
-    axios.get('http://localhost:3000/products')
-      .then(response => {
-        setProducts(response.data);
-      })
+    axios.get('/products')
+      .then(response => setProducts(response.data))
       .catch(error => console.error('Error al obtener productos:', error));
   }, []);
 
@@ -22,12 +23,19 @@ function App() {
 
   // Función para agregar producto
   const addProduct = () => {
-    axios.post('http://localhost:3000/products', newProduct)
-      .then(response => {
-        setProducts([...products, response.data]);
+    console.log('Enviando:', newProduct);
+    axios.post('/products', newProduct)
+      .then(res => {
+        console.log('Respuesta:', res.data);
+        setProducts([...products, res.data]);
         setNewProduct({ name: '', description: '', quantity: 0, price: 0 });
       })
-      .catch(error => console.error('Error creando producto:', error));
+      .catch(err => {
+        console.error('⛔ Error creando producto:', err.message);
+        if (err.response) {
+          console.error('🔁 Backend respondió con:', err.response.data);
+        }
+      });
   };
 
   return (
